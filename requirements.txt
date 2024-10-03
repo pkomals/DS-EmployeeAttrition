@@ -1,0 +1,8 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+plotly
+-e .
+#when get_requirements will be invoked, it'll read -e . as well. to avoid it make changes in setup.py
