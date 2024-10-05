@@ -4,7 +4,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-project_name="EmotionRecog"
+project_name="EmployeeAttrition"
 
 list_of_files=[
     #"github/workflows/.gitkeeper"
