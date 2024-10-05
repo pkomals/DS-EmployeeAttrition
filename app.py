@@ -1,8 +1,8 @@
 import sys
-from src.EmotionRecog.logger import logging
-from src.EmotionRecog.exception import CustomException
-from src.EmotionRecog.Components.data_ingestion import DataIngestion
-from src.EmotionRecog.Components.data_ingestion import DataIngestionConfig
+from src.EmpAttrition.logger import logging
+from src.EmpAttrition.exception import CustomException
+from src.EmpAttrition.Components.data_ingestion import DataIngestion
+from src.EmpAttrition.Components.data_ingestion import DataIngestionConfig
 
 
 if __name__=='__main__':
