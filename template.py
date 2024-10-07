@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import logging
+import logginggit 
 
 logging.basicConfig(level=logging.INFO)
 
