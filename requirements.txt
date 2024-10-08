@@ -7,4 +7,5 @@ plotly
 mysql-connector-python
 pymysql    
 python-dotenv
+
 #-e . 
