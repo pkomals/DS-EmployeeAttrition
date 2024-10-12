@@ -23,7 +23,9 @@ class DataIngestion:
             df=read_sql_data() #Reading from MYSQL DB
             logging.info("Reading raw data from MYSQL")
             
-            os.makedirs(os.path.dirname(self.ingestion_config.test_data_path)) #could be TRain_Data_PAth or Raw_data_path
+            if not os.path.exists(os.path.dirname(self.ingestion_config.test_data_path)):
+                os.makedirs(os.path.dirname(self.ingestion_config.test_data_path))
+                
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
             logging.info("Reading completed")
 

@@ -1,6 +1,5 @@
 import sys
-from src.EmotionRecog.logger import logging
-
+from src.EmpAttrition import logger
 
 def error_message_details(error,error_details:sys):
     _,_,exc_tb=error_details.exc_info()
