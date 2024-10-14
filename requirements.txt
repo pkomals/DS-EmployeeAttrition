@@ -8,5 +8,5 @@ mysql-connector-python
 pymysql    
 python-dotenv
 catboost
-
-#-e . 
+mlflow==2.2.2
+#-e .   

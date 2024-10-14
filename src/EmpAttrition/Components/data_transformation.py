@@ -87,43 +87,51 @@ class DataTransformation:
             ## divide the train dataset to independent and dependent feature
 
             input_features_train_df=train_df.drop(columns=[target_attr],axis=1)
-            target_feature_train_df=train_df[target_attr]
+            target_feature_train_df=train_df[target_attr].apply(lambda x: 1 if x == 'Yes' else 0)
+            
 
             ## divide the test dataset to independent and dependent feature
 
             input_feature_test_df=test_df.drop(columns=[target_attr],axis=1)
-            target_feature_test_df=test_df[target_attr]
+            target_feature_test_df=test_df[target_attr].apply(lambda x: 1 if x == 'Yes' else 0)
 
             logging.info("Applying Preprocessing on training and test dataframe")
 
             
+
             input_feature_train_arr=preprocessing_obj.fit_transform(input_features_train_df)
             input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
 
-            counter = Counter(target_feature_train_df)
-            print('Before', counter)
-            smtom = SMOTETomek(random_state=139)
-            input_feature_train_arr, target_feature_train_df = smtom.fit_resample(input_feature_train_arr, target_feature_train_df)
+            # counter = Counter(target_feature_train_df)
+            # # print('Before', counter)
+            # smtom = SMOTETomek(random_state=139)
+            # input_feature_train_arr, target_feature_train_df = smtom.fit_resample(input_feature_train_arr, target_feature_train_df)
 
-            counter = Counter(target_feature_train_df)
-            print('After', counter)
+            # counter = Counter(target_feature_train_df)
+            # # print('After', counter)
+            
+            # logging.info("Done Oversampling")
 
-            logging.info("Done Oversampling")
+
 
             train_arr = np.c_[
                 input_feature_train_arr, np.array(target_feature_train_df)
             ]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            
+            #logging.info(f"train_arr{train_arr}")
+
 
             
 
-            logging.info(f"Saved preprocessing object")
-
+            
             save_object(
 
                 file_path=self.data_transformation_config.preprocessor_obj_file,
                 obj=preprocessing_obj
             )
+            logging.info(f"Saved preprocessing object")
+
 
             return (
 
