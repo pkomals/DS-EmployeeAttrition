@@ -23,6 +23,7 @@ from src.EmpAttrition.exception import CustomException
 from src.EmpAttrition.logger import logging
 from src.EmpAttrition.utils import save_object
 from src.EmpAttrition.Components.data_ingestion import DataIngestionConfig,DataIngestion
+from sklearn.base import BaseEstimator, TransformerMixin
 
 import os 
 
@@ -32,7 +33,9 @@ import os
 class DataTransformationConfig:
     preprocessor_obj_file=os.path.join('artifact','preprocessor.pkl')
 
+
 class DataTransformation:
+    
     def __init__(self):
         self.data_transformation_config=DataTransformationConfig()
         data = pd.read_csv(DataIngestionConfig.raw_data_path)
@@ -45,7 +48,7 @@ class DataTransformation:
             data = pd.read_csv(DataIngestionConfig.raw_data_path)
             Numerical_Attributes=[attr for attr in data.columns if data[attr].dtype!='O']
             Categorical_Attributes=[attr for attr in data.columns if data[attr].dtype=='O']
-            Categorical_Attributes.remove('ATTRITION')
+            Numerical_Attributes.remove('left')
             num_pipeline=Pipeline(steps=[
                 ("imputer",SimpleImputer(strategy='median')),
                 ('scalar',MinMaxScaler())
@@ -53,7 +56,8 @@ class DataTransformation:
             ])
             cat_pipeline=Pipeline(steps=[
             ("imputer",SimpleImputer(strategy="most_frequent")),
-            ("one_hot_encoder",OneHotEncoder())
+            ("one_hot_encoder", OneHotEncoder()),
+            ("scalar",StandardScaler(with_mean=False))
             ])
 
             logging.info(f"Categorical Columns:{Categorical_Attributes}")
@@ -79,25 +83,21 @@ class DataTransformation:
 
             preprocessing_obj=self.get_data_tranformer_obj()
 
-            # Numerical_Attributes=['AGE', 'DAILYRATE', 'DISTANCEFROMHOME', 'EDUCATION', 'ENVIRONMENTSATISFACTION', 'HOURLYRATE', 'JOBINVOLVEMENT', 'JOBLEVEL', 'JOBSATISFACTION', 'MONTHLYINCOME', 'MONTHLYRATE', 'NUMCOMPANIESWORKED', 'PERCENTSALARYHIKE', 'PERFORMANCERATING', 'RELATIONSHIPSATISFACTION', 'STOCKOPTIONLEVEL', 'TOTALWORKINGYEARS', 'TRAININGTIMESLASTYEAR', 'WORKLIFEBALANCE', 'YEARSATCOMPANY', 'YEARSINCURRENTROLE', 'YEARSSINCELASTPROMOTION', 'YEARSWITHCURRMANAGER']
-            # Categorical_Attributes=['ATTRITION', 'BUSINESSTRAVEL', 'DEPARTMENT', 'EDUCATIONFIELD', 'GENDER', 'JOBROLE', 'MARITALSTATUS', 'OVERTIME']
             
-            target_attr='ATTRITION'
+            target_attr='left'
 
             ## divide the train dataset to independent and dependent feature
 
             input_features_train_df=train_df.drop(columns=[target_attr],axis=1)
-            target_feature_train_df=train_df[target_attr].apply(lambda x: 1 if x == 'Yes' else 0)
+            target_feature_train_df=train_df[target_attr]
             
 
             ## divide the test dataset to independent and dependent feature
 
             input_feature_test_df=test_df.drop(columns=[target_attr],axis=1)
-            target_feature_test_df=test_df[target_attr].apply(lambda x: 1 if x == 'Yes' else 0)
+            target_feature_test_df=test_df[target_attr]
 
-            logging.info("Applying Preprocessing on training and test dataframe")
-
-            
+            logging.info("Applying Preprocessing on training and test dataframe")            
 
             input_feature_train_arr=preprocessing_obj.fit_transform(input_features_train_df)
             input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
@@ -143,8 +143,4 @@ class DataTransformation:
 
         except Exception as e:
             raise CustomException(e,sys)
-
     
-        
-    
-

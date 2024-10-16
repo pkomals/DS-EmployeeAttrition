@@ -27,7 +27,7 @@ def read_sql_data():
             db=db
         )
         logging.info("Connection established")
-        df=pd.read_sql_query("select * from employee_attrition",mydb)
+        df=pd.read_sql_query("select * from hr_comma_sep",mydb)
         print(df.head())
 
         return df #returning df to data ingestion(raw)
